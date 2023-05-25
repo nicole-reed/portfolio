@@ -1,5 +1,5 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
+import { FirebaseApp, initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth, GoogleAuthProvider } from "@firebase/auth";
 import { getStorage } from "firebase/storage"
@@ -14,13 +14,24 @@ const firebaseConfig = {
     appId: process.env.NEXT_PUBLIC_APP_ID
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-// Initialize database
-const db = getFirestore(app);
-// Initialize auth and google as an auth provider
-const auth = getAuth();
-const provider = new GoogleAuthProvider();
-//file storage
-const storage = getStorage(app)
-export { db, auth, provider, storage };
+let _app: FirebaseApp;
+
+const getFirebaseApp = (): FirebaseApp => {
+    if (!_app) {
+        _app = initializeApp(firebaseConfig);
+    }
+    return _app
+}
+
+export const getFirebase = () => {
+    const app = getFirebaseApp()
+    // Initialize database
+    const db = getFirestore(app);
+    // Initialize auth and google as an auth provider
+    const auth = getAuth();
+    const provider = new GoogleAuthProvider();
+    //file storage
+    const storage = getStorage(app)
+
+    return { db, auth, provider, storage, app }
+}
