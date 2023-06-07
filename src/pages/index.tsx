@@ -19,7 +19,7 @@ export default function Home() {
 
     const projectDocs = querySnapshot.docs.map((doc) => projectSchema.parse(doc.data()))
 
-    setProjects(projectDocs)
+    setProjects(projectDocs.sort((a, b) => a.order - b.order))
   }
 
   useEffect(() => {
